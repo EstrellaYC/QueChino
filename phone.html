@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=0.3, maximum-scale=0.3, minimum-scale=0.3, user-scalable=no">
     <style>
-
+        body {
+            touch-action: manipulation; /* 禁用双击缩放 */
+            -ms-touch-action: manipulation; /* IE兼容 */
+        }
         /* 新增样式 */
         #startScreen h1 {
             font-size: 60px;
@@ -45,8 +50,6 @@
 
         /* 保持之前所有样式不变 */
         body {
-            touch-action: manipulation; /* 禁用双击缩放 */
-            -ms-touch-action: manipulation; /* IE兼容 */
             font-family: -apple-system, Roboto;
             max-width: 800px;
             margin: 40px auto;
@@ -196,6 +199,7 @@
     </style>
 </head>
 <body>
+    
     <img src="logo.png" id="logo" alt="Logo">
 
     <div id="startScreen">
