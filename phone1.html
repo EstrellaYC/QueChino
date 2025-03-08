@@ -425,6 +425,37 @@
             mistakes = 0;
             updateHearts();
         }
+        
+        function showResult(passedLevels) {
+            const messages = [
+                { level: 10, msg: "¡Dios mío, eres un prodigio del chino! 🎌 Tu talento supera al 99% del mundo. ¡No desperdicies este don, empieza ya nuestro curso GRATIS!" },
+                { level: 9, msg: "¡Casi perfecto! 🌟 Tu talento supera al 95% del mundo. ¿Listo para ser fluido? ¡Nuestro curso te llevará al máximo!" },
+                { level: 8, msg: "¡Impresionante! 🔥 Superas al 80%. Solo un paso más para la maestría. ¡Aprovecha nuestras lecciones gratuitas!" },
+                { level: 7, msg: "¡Muy bien! 🚀 Tu chino supera al 65%. Con un poco de estudio, ¡serás increíble! ¿Empezamos hoy?" },
+                { level: 6, msg: "¡Buen progreso! 🌱 Superas al 50%. ¿Quieres destacar? ¡Nuestro curso te da las herramientas!" },
+                { level: 5, msg: "¡Tienes potencial! 💡 Superas al 40%. Con nuestras clases, ¡transformarás 'hola' en conversaciones!" },
+                { level: 4, msg: "¡Sigue así! 🌈 Tu chino supera al 30%. ¿Sabías que en 10 lecciones podrías triplicarlo? ¡Prueba gratis!" },
+                { level: 2, msg: "¿Primer contacto? 😅 Superas al 20%. ¡Aprende pinyin con nosotros y verás la magia! ✨" },
+                { level: 0, msg: "¿Se te resbaló el dedo? 😜 ¡Inténtalo de nuevo o mejor… ven a descubrir el chino desde cero! 🆓" }
+            ];
+
+            const result = messages.find(m => passedLevels >= m.level) || messages[messages.length-1];
+            
+            const trophySound = document.getElementById('trophySound');
+            trophySound.currentTime = 0;
+            trophySound.play();
+            const trophyImg = document.getElementById('trophyImage');
+            if(passedLevels >= 1) {
+                trophyImg.style.display = 'block';
+            } else {
+                trophyImg.style.display = 'none';
+            }
+            
+            document.getElementById('resultTitle').textContent = `¡Completaste ${passedLevels} niveles!`;
+            document.getElementById('resultMessage').textContent = result.msg;
+            document.getElementById('resultModal').style.display = 'block';
+            document.getElementById('gameContainer').style.display = 'none';
+        }
 
         async function shareResult() {
             const resultText = `🎉 ¡Acabo de superar ${currentLevel-1} niveles en el Reto de Pinyin! 
@@ -452,41 +483,8 @@
                 console.log('Error sharing:', err);
                 alert('¡Gracias por querer compartir! 🥰 Puedes compartir manualmente esta página");
             }
-        }
-
-        function showResult(passedLevels) {
-            const messages = [
-                { level: 10, msg: "¡Dios mío, eres un prodigio del chino! 🎌 Tu talento supera al 99% del mundo. ¡No desperdicies este don, empieza ya nuestro curso GRATIS!" },
-                { level: 9, msg: "¡Casi perfecto! 🌟 Tu talento supera al 95% del mundo. ¿Listo para ser fluido? ¡Nuestro curso te llevará al máximo!" },
-                { level: 8, msg: "¡Impresionante! 🔥 Superas al 80%. Solo un paso más para la maestría. ¡Aprovecha nuestras lecciones gratuitas!" },
-                { level: 7, msg: "¡Muy bien! 🚀 Tu chino supera al 65%. Con un poco de estudio, ¡serás increíble! ¿Empezamos hoy?" },
-                { level: 6, msg: "¡Buen progreso! 🌱 Superas al 50%. ¿Quieres destacar? ¡Nuestro curso te da las herramientas!" },
-                { level: 5, msg: "¡Tienes potencial! 💡 Superas al 40%. Con nuestras clases, ¡transformarás 'hola' en conversaciones!" },
-                { level: 4, msg: "¡Sigue así! 🌈 Tu chino supera al 30%. ¿Sabías que en 10 lecciones podrías triplicarlo? ¡Prueba gratis!" },
-                { level: 2, msg: "¿Primer contacto? 😅 Superas al 20%. ¡Aprende pinyin con nosotros y verás la magia! ✨" },
-                { level: 0, msg: "¿Se te resbaló el dedo? 😜 ¡Inténtalo de nuevo o mejor… ven a descubrir el chino desde cero! 🆓" }
-            ];
-
-            const result = messages.find(m => passedLevels >= m.level) || messages[messages.length-1];
-            
-    // 播放奖杯音效
-    const trophySound = document.getElementById('trophySound');
-    trophySound.currentTime = 0;
-    trophySound.play();
-
-    // 控制图片显示
-    const trophyImg = document.getElementById('trophyImage');
-    if(passedLevels >= 1) {
-        trophyImg.style.display = 'block';
-    } else {
-        trophyImg.style.display = 'none';
-    }
-
-    document.getElementById('resultTitle').textContent = `¡Completaste ${passedLevels} niveles!`;
-    document.getElementById('resultMessage').textContent = result.msg;
-    document.getElementById('resultModal').style.display = 'block';
-    document.getElementById('gameContainer').style.display = 'none';
-}
+        }        
+        
 </script>
 
 </body>
