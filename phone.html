@@ -4,25 +4,22 @@
         /* 保持之前所有样式不变 */
         body {
             font-family: Arial, sans-serif;
-            max-width: 400px;
-            margin: 20px auto;
-            padding: 20px;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 40px;
             background: #FFF5E6;
             text-align: center;
             position: relative;
         }
 
         #logo {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            height: 80px;
+            height: 200px;
         }
 
         #startScreen img {
             display: block;
             margin: 20px auto;
-            max-width: 300px;
+            max-width: 800px;
         }
 
         #gameContainer {
@@ -32,10 +29,10 @@
         /* 按钮通用样式 */
         button {
             border: none !important;
-            border-radius: 8px !important;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+            border-radius: 20px !important;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1) !important;
             color: white !important;
-            padding: 12px 24px !important;
+            padding: 40px 300px !important;
             transition: all 0.3s ease !important;
             cursor: pointer !important;
         }
@@ -61,23 +58,17 @@
             background: #96D979 !important;
         }
 
-        /* 悬停效果 */
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15) !important;
-        }
-
         /* 点击效果 */
         button:active {
             transform: translateY(1px);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
         }
 
         /* 保留原有拼音按钮样式 */
         .tone-btn {
             background: white !important;
             color: #4A90E2 !important;
-            border: 3px solid #4A90E2 !important;
+            border: 12px solid #4A90E2 !important;
             box-shadow: none !important;
             font-weight: bold !important;
         }
@@ -89,12 +80,12 @@
 
         .tone-btn:active {
             transform: scale(0.95);
-            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
         }
 
         .hearts {
-            margin: 20px;
-            font-size: 32px;
+            margin: 40px;
+            font-size: 64px;
             display: flex;
             justify-content: center;
             flex-direction: row-reverse;
@@ -102,7 +93,7 @@
 
         .heart {
             color: #FF4757;
-            margin: 0 5px;
+            margin: 0 10px;
             transition: all 0.3s;
         }
 
@@ -112,10 +103,7 @@
         }
 
         #levelStatus {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 18px;
+            font-size: 60px;
             color: #4A90E2;
         }
 
@@ -124,7 +112,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            max-width: 200px;
+            max-width: 400px;
             z-index: 100;
             animation: fadeInOut 1s forwards;
         }
@@ -137,10 +125,10 @@
         }
 
         #progress {
-            height: 15px;
+            height: 20px;
             background: #eee;
-            margin: 20px;
-            border-radius: 5px;
+            margin: 40px;
+            border-radius: 10px;
         }
 
         #progressBar {
@@ -157,9 +145,9 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: white;
-            padding: 30px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.2);
-            border-radius: 15px;
+            padding: 60px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.2);
+            border-radius: 30px;
             z-index: 200;
         }
     </style>
@@ -170,7 +158,7 @@
     <div id="startScreen">
         <h1>¡Descubre tu talento para el chino! 🎯</h1>
         <img src="start.png" alt="Comienza el juego">
-        <button onclick="startGame()" style="font-size: 24px; padding: 15px 30px;">
+        <button onclick="startGame()" style="font-size: 40px; padding: 10px 20px;">
             🚀 EMPEZAR
         </button>
     </div>
@@ -192,7 +180,7 @@
         </div>
 
         <div id="controls">
-            <button onclick="playQuestionPhase()" style="margin: 20px; padding: 10px 20px;">
+            <button onclick="playQuestionPhase()" style="margin: 40px; padding: 10px 20px;">
                 🔄 REPETIR
             </button>
         </div>
@@ -200,7 +188,7 @@
 
 <div id="resultModal">
     <h2 id="resultTitle"></h2>
-    <img id="trophyImage" src="trophy.png" alt="Trofeo" style="display: none; width: 400px; height: 300px; margin: 15px auto;">
+    <img id="trophyImage" src="trophy.png" alt="Trofeo" style="display: none; width: 800px; height: 600px; margin: 15px auto;">
     <p id="resultMessage"></p>
     <div id="resultActions">
         <button onclick="restartGame()">🔄 REINTENTAR</button>
