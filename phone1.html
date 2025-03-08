@@ -412,14 +412,6 @@
             return Array.from({length}, () => tones[Math.floor(Math.random()*4)]);
         }
 
-        function startGame() {
-            document.getElementById('startScreen').style.display = 'none';
-            document.getElementById('gameContainer').style.display = 'block';
-            mistakes = 0;
-            updateHearts();
-            nextLevel();
-        }
-
         function nextLevel() {
             currentSequence = generateSequence(currentLevel);
             document.getElementById('levelStatus').textContent = `Nivel ${currentLevel} - ${currentLevel} sílaba${currentLevel > 1 ? 's' : ''}`;
@@ -490,6 +482,14 @@
             document.getElementById('resultMessage').textContent = result.msg;
             document.getElementById('resultModal').style.display = 'block';
             document.getElementById('gameContainer').style.display = 'none';
+        }
+            
+        function startGame() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('gameContainer').style.display = 'block';
+            mistakes = 0;
+            updateHearts();
+            nextLevel();
         }
     </script>
 <div id="shareFallback">📋 链接已复制，快去粘贴分享吧！</div>
