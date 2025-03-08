@@ -456,35 +456,50 @@
             document.getElementById('resultModal').style.display = 'block';
             document.getElementById('gameContainer').style.display = 'none';
         }
-
         async function shareResult() {
-            const resultText = `🎉 ¡Acabo de superar ${currentLevel-1} niveles en el Reto de Pinyin! 
-            ¿Te atreves a intentarlo? ${currentLevel >= 5 ? '🚀' : '😎'} 
-            ${document.getElementById('resultMessage').textContent}
-            → Juega aquí: ${location.href}`;
+            const shareData = {
+                title: '¡Mi resultado del Reto de Pinyin!',
+                text: `Acabo de completar ${currentLevel - 1} niveles en el Reto de Pinyin 🎉 ¿Te atreves a superarme?\n${getShareText(currentLevel - 1)}`,
+                url: 'https://tu-dominio.com/pinyin-game'
+            };
 
             try {
+                // 检查Web Share API支持
                 if (navigator.share) {
-                    // 使用Web Share API
-                    await navigator.share({
-                        title: '🔥 Reto de Pinyin',
-                        text: resultText,
-                        url: 'https://nas.io/baimu' // 替换为你的真实URL
-                    });
-                } else if (navigator.clipboard) {
-                    // 备用方案：复制到剪贴板
-                    await navigator.clipboard.writeText(resultText);
-                    alert('¡Enlace copiado! Pégalo donde quieras compartir 📋');
+                    await navigator.share(shareData);
                 } else {
-                    // 最终备用方案
-                    prompt('Presiona Ctrl+C para copiar este mensage:', resultText);
+                    // 备用方案：复制到剪贴板
+                    await navigator.clipboard.writeText(
+                        `${shareData.text}\n${shareData.url}`
+                    );
+                    alert('✅ ¡Resultado copiado! Puedes pegarlo en cualquier app');
                 }
             } catch (err) {
-                console.log('Error sharing:', err);
-                alert('¡Gracias por querer compartir! 🥰 Puedes compartir manualmente esta página");
+                // 用户取消分享时不显示错误
+                if (!err.toString().includes('AbortError')) {
+                    alert('⚠️ Puedes compartir manualmente:\n\n' + 
+                          `${shareData.text}\n` +
+                          `Enlace: ${shareData.url}`);
+                }
             }
-        }        
-        
+        }
+
+        // 新增分享文案生成函数
+        function getShareText(passedLevels) {
+            const messages = {
+                10: "🌟 ¡Soy un prodigio del chino!",
+                9: "¡Casi perfecto! Solo me faltó 1 nivel",
+                8: "¡Impresionante resultado!",
+                7: "¡Muy buen progreso!",
+                6: "¡Sigue practicando!",
+                5: "¡Tienes potencial!",
+                4: "¡Inténtalo de nuevo!",
+                2: "¡Primer contacto con el chino!",
+                0: "¡El chino es más divertido de lo que parece!"
+            };
+            return messages[passedLevels] || "¡Aprende chino de forma divertida!";
+        }
+
 </script>
 
 </body>
