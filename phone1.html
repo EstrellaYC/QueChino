@@ -459,6 +459,7 @@
                     .then(() => alert('📋 结果已复制，快去粘贴分享吧！'))
                     .catch(() => alert('⚠️ 自动复制失败，请手动复制文本'));
             }
+            
         function showResult(passedLevels) {
             const messages = [
                 { level: 10, msg: "¡Dios mío, eres un prodigio del chino! 🎌 Tu talento supera al 99% del mundo. ¡No desperdicies este don, empieza ya nuestro curso GRATIS!" },
@@ -493,6 +494,6 @@
     document.getElementById('gameContainer').style.display = 'none';
 }
 </script>
-
+<div id="shareFallback">📋 链接已复制，快去粘贴分享吧！</div>
 </body>
 </html>
