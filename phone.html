@@ -1,102 +1,103 @@
 <!DOCTYPE html>
 <html lang="es">
 <style>
-    /* 移动端优化样式 */
+    /* 移动端适配 */
     body {
-        max-width: 100%;
-        margin: 0 auto;
-        padding: 15px;
-        min-height: 100vh;
-        box-sizing: border-box;
+        max-width: 100% !important;
+        margin: 10px auto !important;
+        padding: 10px !important;
     }
 
     #logo {
-        position: relative;
-        top: auto;
-        left: auto;
-        height: 35px;
-        margin-bottom: 20px;
+        height: 30px !important;
+        top: 5px !important;
+        left: 5px !important;
     }
 
     #startScreen img {
-        max-width: 250px;
+        max-width: 90% !important;
+        margin: 10px auto !important;
     }
 
-    button {
-        width: 100%;
-        margin: 8px 0 !important;
-        padding: 18px 24px !important;
+    #startScreen button {
         font-size: 18px !important;
+        padding: 10px 20px !important;
+    }
+
+    #levelStatus {
+        position: relative !important;
+        top: auto !important;
+        right: auto !important;
+        font-size: 16px !important;
+        margin: 10px 0;
+    }
+
+    .hearts {
+        font-size: 24px !important;
+        margin: 10px !important;
     }
 
     #toneButtons {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
         padding: 0 10px;
     }
 
     .tone-btn {
-        height: 80px;
+        width: 60px !important;
+        height: 60px !important;
         font-size: 24px !important;
     }
 
-    .hearts {
-        font-size: 28px;
-        flex-direction: row;
-        justify-content: center;
-    }
-
-    #levelStatus {
-        position: relative;
-        top: auto;
-        right: auto;
-        margin: 15px 0;
-        font-size: 16px;
-    }
-
     #progress {
-        margin: 15px 10px;
+        margin: 10px !important;
+        height: 6px !important;
     }
 
-    #controls button {
-        margin: 15px 0 !important;
-    }
-
-    /* 结果弹窗优化 */
     #resultModal {
-        width: 90%;
-        padding: 20px;
-        box-sizing: border-box;
+        width: 90% !important;
+        padding: 15px !important;
     }
 
     #trophyImage {
-        width: 100% !important;
+        width: 90% !important;
         height: auto !important;
-        max-width: 300px;
+    }
+
+    h1 {
+        font-size: 24px !important;
+        padding: 0 10px;
+    }
+
+    h2 {
+        font-size: 20px !important;
+    }
+
+    #controls button {
+        margin: 10px !important;
+        padding: 8px 16px !important;
+    }
+
+    #resultActions button {
+        display: block;
+        width: 100%;
+        margin: 8px 0 !important;
     }
 
     .feedback-image {
-        max-width: 150px;
+        max-width: 150px !important;
     }
 
-    /* 横屏提示 */
-    @media screen and (orientation: landscape) {
-        body:before {
-            content: "请将手机旋转为竖屏使用";
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.9);
-            color: white;
-            font-size: 24px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
+    @media (min-width: 768px) {
+        /* 保持原有PC样式 */
+        body {
+            max-width: 800px !important;
+            margin: 20px auto !important;
+            padding: 20px !important;
         }
+        /* 其他PC端样式恢复... */
     }
 </style>
 </head>
