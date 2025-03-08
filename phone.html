@@ -1,105 +1,168 @@
 <!DOCTYPE html>
 <html lang="es">
-<style>
-    /* 移动端适配 */
-    body {
-        max-width: 100% !important;
-        margin: 10px auto !important;
-        padding: 10px !important;
-    }
-
-    #logo {
-        height: 30px !important;
-        top: 5px !important;
-        left: 5px !important;
-    }
-
-    #startScreen img {
-        max-width: 90% !important;
-        margin: 10px auto !important;
-    }
-
-    #startScreen button {
-        font-size: 18px !important;
-        padding: 10px 20px !important;
-    }
-
-    #levelStatus {
-        position: relative !important;
-        top: auto !important;
-        right: auto !important;
-        font-size: 16px !important;
-        margin: 10px 0;
-    }
-
-    .hearts {
-        font-size: 24px !important;
-        margin: 10px !important;
-    }
-
-    #toneButtons {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        justify-content: center;
-        padding: 0 10px;
-    }
-
-    .tone-btn {
-        width: 60px !important;
-        height: 60px !important;
-        font-size: 24px !important;
-    }
-
-    #progress {
-        margin: 10px !important;
-        height: 6px !important;
-    }
-
-    #resultModal {
-        width: 90% !important;
-        padding: 15px !important;
-    }
-
-    #trophyImage {
-        width: 90% !important;
-        height: auto !important;
-    }
-
-    h1 {
-        font-size: 24px !important;
-        padding: 0 10px;
-    }
-
-    h2 {
-        font-size: 20px !important;
-    }
-
-    #controls button {
-        margin: 10px !important;
-        padding: 8px 16px !important;
-    }
-
-    #resultActions button {
-        display: block;
-        width: 100%;
-        margin: 8px 0 !important;
-    }
-
-    .feedback-image {
-        max-width: 150px !important;
-    }
-
-    @media (min-width: 768px) {
-        /* 保持原有PC样式 */
+    <style>
+        /* 保持之前所有样式不变 */
         body {
-            max-width: 800px !important;
-            margin: 20px auto !important;
-            padding: 20px !important;
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #FFF5E6;
+            text-align: center;
+            position: relative;
         }
-        /* 其他PC端样式恢复... */
-    }
-</style>
+
+        #logo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            height: 80px;
+        }
+
+        #startScreen img {
+            display: block;
+            margin: 20px auto;
+            max-width: 300px;
+        }
+
+        #gameContainer {
+            display: none;
+        }
+
+        /* 按钮通用样式 */
+        button {
+            border: none !important;
+            border-radius: 8px !important;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+            color: white !important;
+            padding: 12px 24px !important;
+            transition: all 0.3s ease !important;
+            cursor: pointer !important;
+        }
+
+        /* 开始按钮 & 重新开始按钮 */
+        #startScreen button,
+        #resultActions button:nth-child(1) {
+            background: #EEB0A1 !important;
+        }
+
+        /* 重播音频按钮 */
+        #controls button {
+            background: #EBCD8E !important;
+        }
+
+        /* 分享按钮 */
+        #resultActions button:nth-child(2) {
+            background: #72D2E2 !important;
+        }
+
+        /* 去上课按钮 */
+        #resultActions button:nth-child(3) {
+            background: #96D979 !important;
+        }
+
+        /* 悬停效果 */
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15) !important;
+        }
+
+        /* 点击效果 */
+        button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+        }
+
+        /* 保留原有拼音按钮样式 */
+        .tone-btn {
+            background: white !important;
+            color: #4A90E2 !important;
+            border: 3px solid #4A90E2 !important;
+            box-shadow: none !important;
+            font-weight: bold !important;
+        }
+
+        .tone-btn.playing {
+            background: #4A90E2 !important;
+            color: white !important;
+        }
+
+        .tone-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+
+        .hearts {
+            margin: 20px;
+            font-size: 32px;
+            display: flex;
+            justify-content: center;
+            flex-direction: row-reverse;
+        }
+
+        .heart {
+            color: #FF4757;
+            margin: 0 5px;
+            transition: all 0.3s;
+        }
+
+        .heart.lost {
+            filter: grayscale(100%);
+            opacity: 0.5;
+        }
+
+        #levelStatus {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 18px;
+            color: #4A90E2;
+        }
+
+        .feedback-image {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 200px;
+            z-index: 100;
+            animation: fadeInOut 1s forwards;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+        }
+
+        #progress {
+            height: 15px;
+            background: #eee;
+            margin: 20px;
+            border-radius: 5px;
+        }
+
+        #progressBar {
+            height: 100%;
+            width: 0%;
+            background: #4A90E2;
+            transition: width 0.5s;
+        }
+
+        #resultModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            border-radius: 15px;
+            z-index: 200;
+        }
+    </style>
 </head>
 <body>
     <img src="logo.png" id="logo" alt="Logo">
