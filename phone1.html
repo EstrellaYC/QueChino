@@ -425,7 +425,11 @@
             mistakes = 0;
             updateHearts();
         }
-        
+
+        function shareResult() {
+            alert("¡Función de compartir en desarrollo! 🚧");
+        }
+
         function showResult(passedLevels) {
             const messages = [
                 { level: 10, msg: "¡Dios mío, eres un prodigio del chino! 🎌 Tu talento supera al 99% del mundo. ¡No desperdicies este don, empieza ya nuestro curso GRATIS!" },
@@ -441,65 +445,24 @@
 
             const result = messages.find(m => passedLevels >= m.level) || messages[messages.length-1];
             
-            const trophySound = document.getElementById('trophySound');
-            trophySound.currentTime = 0;
-            trophySound.play();
-            const trophyImg = document.getElementById('trophyImage');
-            if(passedLevels >= 1) {
-                trophyImg.style.display = 'block';
-            } else {
-                trophyImg.style.display = 'none';
-            }
-            
-            document.getElementById('resultTitle').textContent = `¡Completaste ${passedLevels} niveles!`;
-            document.getElementById('resultMessage').textContent = result.msg;
-            document.getElementById('resultModal').style.display = 'block';
-            document.getElementById('gameContainer').style.display = 'none';
-        }
-        async function shareResult() {
-            const shareData = {
-                title: '¡Mi resultado del Reto de Pinyin!',
-                text: `Acabo de completar ${currentLevel - 1} niveles en el Reto de Pinyin 🎉 ¿Te atreves a superarme?\n${getShareText(currentLevel - 1)}`,
-                url: 'https://tu-dominio.com/pinyin-game'
-            };
+    // 播放奖杯音效
+    const trophySound = document.getElementById('trophySound');
+    trophySound.currentTime = 0;
+    trophySound.play();
 
-            try {
-                // 检查Web Share API支持
-                if (navigator.share) {
-                    await navigator.share(shareData);
-                } else {
-                    // 备用方案：复制到剪贴板
-                    await navigator.clipboard.writeText(
-                        `${shareData.text}\n${shareData.url}`
-                    );
-                    alert('✅ ¡Resultado copiado! Puedes pegarlo en cualquier app');
-                }
-            } catch (err) {
-                // 用户取消分享时不显示错误
-                if (!err.toString().includes('AbortError')) {
-                    alert('⚠️ Puedes compartir manualmente:\n\n' + 
-                          `${shareData.text}\n` +
-                          `Enlace: ${shareData.url}`);
-                }
-            }
-        }
+    // 控制图片显示
+    const trophyImg = document.getElementById('trophyImage');
+    if(passedLevels >= 1) {
+        trophyImg.style.display = 'block';
+    } else {
+        trophyImg.style.display = 'none';
+    }
 
-        // 新增分享文案生成函数
-        function getShareText(passedLevels) {
-            const messages = {
-                10: "🌟 ¡Soy un prodigio del chino!",
-                9: "¡Casi perfecto! Solo me faltó 1 nivel",
-                8: "¡Impresionante resultado!",
-                7: "¡Muy buen progreso!",
-                6: "¡Sigue practicando!",
-                5: "¡Tienes potencial!",
-                4: "¡Inténtalo de nuevo!",
-                2: "¡Primer contacto con el chino!",
-                0: "¡El chino es más divertido de lo que parece!"
-            };
-            return messages[passedLevels] || "¡Aprende chino de forma divertida!";
-        }
-
+    document.getElementById('resultTitle').textContent = `¡Completaste ${passedLevels} niveles!`;
+    document.getElementById('resultMessage').textContent = result.msg;
+    document.getElementById('resultModal').style.display = 'block';
+    document.getElementById('gameContainer').style.display = 'none';
+}
 </script>
 
 </body>
