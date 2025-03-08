@@ -203,23 +203,23 @@
             z-index: 200;
         }
       /* 分享提示样式 */
-      #shareFallback {
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0,0,0,0.8);
-        color: white;
-        padding: 15px 30px;
-        border-radius: 25px;
-        display: none;
-        animation: floatUp 1.5s;
-      }
+        #shareFallback {
+          position: fixed;
+          top: 20px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: rgba(0,0,0,0.8);
+          color: white;
+          padding: 15px 30px;
+          border-radius: 25px;
+          display: none;
+          animation: floatUp 1.5s;
+        }
 
-      @keyframes floatUp {
-          0% { opacity: 0; transform: translate(-50%, 20px); }
-          100% { opacity: 1; transform: translate(-50%, 0); }
-      }
+        @keyframes floatUp {
+            0% { opacity: 0; transform: translate(-50%, 20px); }
+            100% { opacity: 1; transform: translate(-50%, 0); }
+        }
     </style>
 </head>
 <body>
@@ -445,21 +445,20 @@
         }
 
         function shareResult() {
-          const resultText = `${document.getElementById('resultTitle').textContent}\n${document.getElementById('resultMessage').textContent}`;
-          if (navigator.share) {
-            navigator.share({
-                title: '🎉 我的汉语声调挑战成绩',
-                text: resultText,
-                url: 'https://nas.io/baimu'
-              })
-            .then(() => console.log('分享成功'))
-            .catch((error) => console.log('分享取消', error));
-          } else {
-        // 备用方案：复制到剪贴板
-        navigator.clipboard.writeText(`${resultText}\n\n立即挑战 → https://nas.io/baimu`)
-            .then(() => alert('📋 结果已复制，快去粘贴分享吧！'))
-            .catch(() => alert('⚠️ 自动复制失败，请手动复制文本'));
-    }
+            const resultText = `${document.getElementById('resultTitle').textContent}\n${document.getElementById('resultMessage').textContent}`;
+            if (navigator.share) {
+              navigator.share({
+                  title: '🎉 我的汉语声调挑战成绩',
+                  text: resultText,
+                  url: 'https://nas.io/baimu'
+                })
+              .then(() => console.log('分享成功'))
+              .catch((error) => console.log('分享取消', error));
+            } else {
+                navigator.clipboard.writeText(`${resultText}\n\n立即挑战 → https://nas.io/baimu`)
+                    .then(() => alert('📋 结果已复制，快去粘贴分享吧！'))
+                    .catch(() => alert('⚠️ 自动复制失败，请手动复制文本'));
+            }
         function showResult(passedLevels) {
             const messages = [
                 { level: 10, msg: "¡Dios mío, eres un prodigio del chino! 🎌 Tu talento supera al 99% del mundo. ¡No desperdicies este don, empieza ya nuestro curso GRATIS!" },
