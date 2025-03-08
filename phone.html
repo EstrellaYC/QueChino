@@ -45,6 +45,8 @@
 
         /* 保持之前所有样式不变 */
         body {
+            touch-action: manipulation; /* 禁用双击缩放 */
+            -ms-touch-action: manipulation; /* IE兼容 */
             font-family: -apple-system, Roboto;
             max-width: 800px;
             margin: 40px auto;
@@ -192,6 +194,8 @@
             z-index: 200;
         }
     </style>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
 </head>
 <body>
     <img src="logo.png" id="logo" alt="Logo">
