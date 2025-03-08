@@ -202,24 +202,6 @@
             border-radius: 30px;
             z-index: 200;
         }
-      /* 分享提示样式 */
-        #shareFallback {
-          position: fixed;
-          top: 20px;
-          left: 50%;
-          transform: translateX(-50%);
-          background: rgba(0,0,0,0.8);
-          color: white;
-          padding: 15px 30px;
-          border-radius: 25px;
-          display: none;
-          animation: floatUp 1.5s;
-        }
-
-        @keyframes floatUp {
-            0% { opacity: 0; transform: translate(-50%, 20px); }
-            100% { opacity: 1; transform: translate(-50%, 0); }
-        }
     </style>
 </head>
 <body>
@@ -412,6 +394,14 @@
             return Array.from({length}, () => tones[Math.floor(Math.random()*4)]);
         }
 
+        function startGame() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('gameContainer').style.display = 'block';
+            mistakes = 0;
+            updateHearts();
+            nextLevel();
+        }
+
         function nextLevel() {
             currentSequence = generateSequence(currentLevel);
             document.getElementById('levelStatus').textContent = `Nivel ${currentLevel} - ${currentLevel} sílaba${currentLevel > 1 ? 's' : ''}`;
@@ -436,22 +426,34 @@
             updateHearts();
         }
 
-        function shareResult() {
-            const resultText = `${document.getElementById('resultTitle').textContent}\n${document.getElementById('resultMessage').textContent}`;
-            if (navigator.share) {
-              navigator.share({
-                  title: '🎉 我的汉语声调挑战成绩',
-                  text: resultText,
-                  url: 'https://nas.io/baimu'
-                })
-              .then(() => console.log('分享成功'))
-              .catch((error) => console.log('分享取消', error));
-            } else {
-                navigator.clipboard.writeText(`${resultText}\n\n立即挑战 → https://nas.io/baimu`)
-                    .then(() => alert('📋 结果已复制，快去粘贴分享吧！'))
-                    .catch(() => alert('⚠️ 自动复制失败，请手动复制文本'));
+        async function shareResult() {
+            const resultText = `🎉 ¡Acabo de superar ${currentLevel-1} niveles en el Reto de Pinyin! 
+            ¿Te atreves a intentarlo? ${currentLevel >= 5 ? '🚀' : '😎'} 
+            ${document.getElementById('resultMessage').textContent}
+            → Juega aquí: ${location.href}`;
+
+            try {
+                if (navigator.share) {
+                    // 使用Web Share API
+                    await navigator.share({
+                        title: '🔥 Reto de Pinyin',
+                        text: resultText,
+                        url: 'https://nas.io/baimu' // 替换为你的真实URL
+                    });
+                } else if (navigator.clipboard) {
+                    // 备用方案：复制到剪贴板
+                    await navigator.clipboard.writeText(resultText);
+                    alert('¡Enlace copiado! Pégalo donde quieras compartir 📋');
+                } else {
+                    // 最终备用方案
+                    prompt('Presiona Ctrl+C para copiar este mensage:', resultText);
+                }
+            } catch (err) {
+                console.log('Error sharing:', err);
+                alert('¡Gracias por querer compartir! 🥰 Puedes compartir manualmente esta página");
             }
-            
+        }
+
         function showResult(passedLevels) {
             const messages = [
                 { level: 10, msg: "¡Dios mío, eres un prodigio del chino! 🎌 Tu talento supera al 99% del mundo. ¡No desperdicies este don, empieza ya nuestro curso GRATIS!" },
@@ -467,32 +469,25 @@
 
             const result = messages.find(m => passedLevels >= m.level) || messages[messages.length-1];
             
-            // 播放奖杯音效
-            const trophySound = document.getElementById('trophySound');
-            trophySound.currentTime = 0;
-            trophySound.play();
-            // 控制图片显示
-            const trophyImg = document.getElementById('trophyImage');
-            if(passedLevels >= 1) {
-                trophyImg.style.display = 'block';
-            } else {
-                trophyImg.style.display = 'none';
-            }
-            document.getElementById('resultTitle').textContent = `¡Completaste ${passedLevels} niveles!`;
-            document.getElementById('resultMessage').textContent = result.msg;
-            document.getElementById('resultModal').style.display = 'block';
-            document.getElementById('gameContainer').style.display = 'none';
-        }
-            
-        function startGame() {
-            console.log('函数已触发');
-            document.getElementById('startScreen').style.display = 'none';
-            document.getElementById('gameContainer').style.display = 'block';
-            mistakes = 0;
-            updateHearts();
-            nextLevel();
-        }
-    </script>
-<div id="shareFallback">📋 链接已复制，快去粘贴分享吧！</div>
+    // 播放奖杯音效
+    const trophySound = document.getElementById('trophySound');
+    trophySound.currentTime = 0;
+    trophySound.play();
+
+    // 控制图片显示
+    const trophyImg = document.getElementById('trophyImage');
+    if(passedLevels >= 1) {
+        trophyImg.style.display = 'block';
+    } else {
+        trophyImg.style.display = 'none';
+    }
+
+    document.getElementById('resultTitle').textContent = `¡Completaste ${passedLevels} niveles!`;
+    document.getElementById('resultMessage').textContent = result.msg;
+    document.getElementById('resultModal').style.display = 'block';
+    document.getElementById('gameContainer').style.display = 'none';
+}
+</script>
+
 </body>
 </html>
