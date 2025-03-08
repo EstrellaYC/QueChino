@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="es">
+    <style>
+        /* 保持之前所有样式不变 */
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #FFF5E6;
+            text-align: center;
+            position: relative;
+        }
+
+        #logo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            height: 40px;
+        }
+
+        #startScreen img {
+            display: block;
+            margin: 20px auto;
+            max-width: 300px;
+        }
+
+        #gameContainer {
+            display: none;
+        }
+
+        /* 按钮通用样式 */
+        button {
+            border: none !important;
+            border-radius: 8px !important;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+            color: white !important;
+            padding: 12px 24px !important;
+            transition: all 0.3s ease !important;
+            cursor: pointer !important;
+        }
+
+        /* 开始按钮 & 重新开始按钮 */
+        #startScreen button,
+        #resultActions button:nth-child(1) {
+            background: #EEB0A1 !important;
+        }
+
+        /* 重播音频按钮 */
+        #controls button {
+            background: #EBCD8E !important;
+        }
+
+        /* 分享按钮 */
+        #resultActions button:nth-child(2) {
+            background: #72D2E2 !important;
+        }
+
+        /* 去上课按钮 */
+        #resultActions button:nth-child(3) {
+            background: #96D979 !important;
+        }
+
+        /* 悬停效果 */
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15) !important;
+        }
+
+        /* 点击效果 */
+        button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+        }
+
+        /* 保留原有拼音按钮样式 */
+        .tone-btn {
+            background: white !important;
+            color: #4A90E2 !important;
+            border: 3px solid #4A90E2 !important;
+            box-shadow: none !important;
+            font-weight: bold !important;
+        }
+
+        .tone-btn.playing {
+            background: #4A90E2 !important;
+            color: white !important;
+        }
+
+        .tone-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+
+        .hearts {
+            margin: 20px;
+            font-size: 32px;
+            display: flex;
+            justify-content: center;
+            flex-direction: row-reverse;
+        }
+
+        .heart {
+            color: #FF4757;
+            margin: 0 5px;
+            transition: all 0.3s;
+        }
+
+        .heart.lost {
+            filter: grayscale(100%);
+            opacity: 0.5;
+        }
+
+        #levelStatus {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 18px;
+            color: #4A90E2;
+        }
+
+        .feedback-image {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 200px;
+            z-index: 100;
+            animation: fadeInOut 1s forwards;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+        }
+
+        #progress {
+            height: 10px;
+            background: #eee;
+            margin: 20px;
+            border-radius: 5px;
+        }
+
+        #progressBar {
+            height: 100%;
+            width: 0%;
+            background: #4A90E2;
+            transition: width 0.5s;
+        }
+
+        #resultModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            border-radius: 15px;
+            z-index: 200;
+        }
+    </style>
+</head>
+<body>
+    <img src="logo.png" id="logo" alt="Logo">
+
+    <div id="startScreen">
+        <h1>¡Descubre tu talento para el chino! 🎯</h1>
+        <img src="start.png" alt="Comienza el juego">
+        <button onclick="startGame()" style="font-size: 24px; padding: 15px 30px;">
+            🚀 EMPEZAR
+        </button>
+    </div>
+
+    <div id="gameContainer">
+        <h2 id="levelStatus"></h2>
+        <div class="hearts" id="hearts">
+            <span class="heart">❤</span>
+            <span class="heart">❤</span>
+            <span class="heart">❤</span>
+        </div>
+        <div id="progress"><div id="progressBar"></div></div>
+        
+        <div id="toneButtons">
+            <button class="tone-btn" data-tone="1">—</button>
+            <button class="tone-btn" data-tone="2">/</button>
+            <button class="tone-btn" data-tone="3">V</button>
+            <button class="tone-btn" data-tone="4">\</button>
+        </div>
+
+        <div id="controls">
+            <button onclick="playQuestionPhase()" style="margin: 20px; padding: 10px 20px;">
+                🔄 REPETIR
+            </button>
+        </div>
+    </div>
+
+<div id="resultModal">
+    <h2 id="resultTitle"></h2>
+    <img id="trophyImage" src="trophy.png" alt="Trofeo" style="display: none; width: 400px; height: 300px; margin: 15px auto;">
+    <p id="resultMessage"></p>
+    <div id="resultActions">
+        <button onclick="restartGame()">🔄 REINTENTAR</button>
+        <button onclick="shareResult()">📤 COMPARTIR</button>
+        <button onclick="location.href='https://nas.io/baimu'">🎓 QUIERO CLASE 🤩</button>
+    </div>
+</div>
+
+    <!-- Audio Elements -->
+    <audio id="winSound" src="win.mp3"></audio>
+    <audio id="failSound" src="fail.mp3"></audio>
+    <audio id="trophySound" src="trophy.mp3"></audio>
+
+    <script>
+        const tones = [
+            { tone: 1, example: "a" },
+            { tone: 2, example: "b" },
+            { tone: 3, example: "c" },
+            { tone: 4, example: "d" }
+        ];
+
+        let currentLevel = 1;
+        let currentSequence = [];
+        let userInput = [];
+        let mistakes = 0;
+        const maxMistakes = 3;
+        const synth = window.speechSynthesis;
+        let currentStep = 0;
+        let audioController = new AbortController();
+        let isProcessing = false; // 新增点击锁
+
+        async function playSingleTone(index, signal) {
+            return new Promise((resolve) => {
+                const utterance = new SpeechSynthesisUtterance(currentSequence[index].example);
+                utterance.lang = 'zh-CN';
+                utterance.rate = 0.8;
+                
+                const btn = document.querySelector(`[data-tone="${currentSequence[index].tone}"]`);
+                btn.classList.add('playing');
+                
+                utterance.onend = () => {
+                    btn.classList.remove('playing');
+                    resolve();
+                };
+                
+                synth.speak(utterance);
+                signal.addEventListener('abort', () => {
+                    synth.cancel();
+                    btn.classList.remove('playing');
+                    resolve();
+                });
+            });
+        }
+
+        async function playQuestionPhase() {
+            disableButtons(true);
+            isProcessing = true; // 锁定操作
+            audioController.abort();
+            audioController = new AbortController();
+            
+            try {
+                for (let i = 0; i < currentSequence.length; i++) {
+                    await playSingleTone(i, audioController.signal);
+                    await new Promise(r => setTimeout(r, 300));
+                }
+            } finally {
+                currentStep = 0;
+                disableButtons(false);
+                isProcessing = false; // 解锁操作
+            }
+        }
+
+        async function checkInput(selectedTone) {
+            if (isProcessing) return; // 阻止重复点击
+            
+            const expectedTone = currentSequence[currentStep].tone;
+            
+            if (selectedTone == expectedTone) {
+                isProcessing = true; // 锁定操作
+                audioController.abort();
+                audioController = new AbortController();
+                
+                // 先更新步骤再播放音频
+                currentStep++;
+                const currentIndex = currentStep - 1;
+                
+                try {
+                    await playSingleTone(currentIndex, audioController.signal);
+                    
+                    if (currentStep === currentSequence.length) {
+                        showFeedback('pass.png', 'winSound');
+                        if (currentLevel === 10) {
+                            setTimeout(() => showResult(10), 1000);
+                        } else {
+                            setTimeout(nextLevel, 1000);
+                        }
+                    }
+                } finally {
+                    isProcessing = false; // 解锁操作
+                }
+            } else {
+                isProcessing = true; // 锁定操作
+                audioController.abort();
+                showFeedback('sad.png', 'failSound');
+                const btn = document.querySelector(`[data-tone="${selectedTone}"]`);
+                btn.classList.add('wrong');
+                setTimeout(() => btn.classList.remove('wrong'), 300);
+                
+                mistakes++;
+                updateHearts();
+                
+                if (mistakes >= maxMistakes) {
+                    setTimeout(() => showResult(currentLevel - 1), 1000);
+                } else {
+                    disableButtons(true);
+                    setTimeout(async () => {
+                        await playQuestionPhase();
+                        disableButtons(false);
+                    }, 1000);
+                }
+                isProcessing = false; // 解锁操作
+            }
+        }
+
+        // 其他保持不变的函数
+        function updateHearts() {
+            const hearts = Array.from(document.querySelectorAll('.heart')).reverse();
+            hearts.forEach((heart, index) => {
+                heart.classList.toggle('lost', index < mistakes);
+            });
+        }
+
+        function showFeedback(imageSrc, soundId) {
+            const feedback = document.createElement('img');
+            feedback.src = imageSrc;
+            feedback.className = 'feedback-image';
+            document.body.appendChild(feedback);
+            
+            const sound = document.getElementById(soundId);
+            sound.currentTime = 0;
+            sound.play();
+
+            setTimeout(() => {
+                feedback.remove();
+            }, 2000);
+        }
+
+        function generateSequence(length) {
+            return Array.from({length}, () => tones[Math.floor(Math.random()*4)]);
+        }
+
+        function startGame() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('gameContainer').style.display = 'block';
+            mistakes = 0;
+            updateHearts();
+            nextLevel();
+        }
+
+        function nextLevel() {
+            currentSequence = generateSequence(currentLevel);
+            document.getElementById('levelStatus').textContent = `Nivel ${currentLevel} - ${currentLevel} sílaba${currentLevel > 1 ? 's' : ''}`;
+            document.getElementById('progressBar').style.width = `${(currentLevel/10)*100}%`;
+            playQuestionPhase();
+            currentLevel++;
+        }
+
+        function disableButtons(state) {
+            document.querySelectorAll('.tone-btn').forEach(btn => {
+                btn.disabled = state;
+                btn.onclick = state ? null : () => checkInput(btn.dataset.tone);
+            });
+        }
+
+        function restartGame() {
+            document.getElementById('resultModal').style.display = 'none';
+            document.getElementById('startScreen').style.display = 'block';
+            document.getElementById('gameContainer').style.display = 'none';
+            currentLevel = 1;
+            mistakes = 0;
+            updateHearts();
+        }
+
+        function shareResult() {
+            alert("¡Función de compartir en desarrollo! 🚧");
+        }
+
+        function showResult(passedLevels) {
+            const messages = [
+                { level: 10, msg: "¡Dios mío, eres un prodigio del chino! 🎌 Tu talento supera al 99% del mundo. ¡No desperdicies este don, empieza ya nuestro curso GRATIS!" },
+                { level: 9, msg: "¡Casi perfecto! 🌟 Tu talento supera al 95% del mundo. ¿Listo para ser fluido? ¡Nuestro curso te llevará al máximo!" },
+                { level: 8, msg: "¡Impresionante! 🔥 Superas al 80%. Solo un paso más para la maestría. ¡Aprovecha nuestras lecciones gratuitas!" },
+                { level: 7, msg: "¡Muy bien! 🚀 Tu chino supera al 65%. Con un poco de estudio, ¡serás increíble! ¿Empezamos hoy?" },
+                { level: 6, msg: "¡Buen progreso! 🌱 Superas al 50%. ¿Quieres destacar? ¡Nuestro curso te da las herramientas!" },
+                { level: 5, msg: "¡Tienes potencial! 💡 Superas al 40%. Con nuestras clases, ¡transformarás 'hola' en conversaciones!" },
+                { level: 4, msg: "¡Sigue así! 🌈 Tu chino supera al 30%. ¿Sabías que en 10 lecciones podrías triplicarlo? ¡Prueba gratis!" },
+                { level: 2, msg: "¿Primer contacto? 😅 Superas al 20%. ¡Aprende pinyin con nosotros y verás la magia! ✨" },
+                { level: 0, msg: "¿Se te resbaló el dedo? 😜 ¡Inténtalo de nuevo o mejor… ven a descubrir el chino desde cero! 🆓" }
+            ];
+
+            const result = messages.find(m => passedLevels >= m.level) || messages[messages.length-1];
+            
+    // 播放奖杯音效
+    const trophySound = document.getElementById('trophySound');
+    trophySound.currentTime = 0;
+    trophySound.play();
+
+    // 控制图片显示
+    const trophyImg = document.getElementById('trophyImage');
+    if(passedLevels >= 1) {
+        trophyImg.style.display = 'block';
+    } else {
+        trophyImg.style.display = 'none';
+    }
+
+    document.getElementById('resultTitle').textContent = `¡Completaste ${passedLevels} niveles!`;
+    document.getElementById('resultMessage').textContent = result.msg;
+    document.getElementById('resultModal').style.display = 'block';
+    document.getElementById('gameContainer').style.display = 'none';
+}
+</script>
+
+</body>
+</html>
