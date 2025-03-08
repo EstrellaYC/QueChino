@@ -475,24 +475,22 @@
 
             const result = messages.find(m => passedLevels >= m.level) || messages[messages.length-1];
             
-    // 播放奖杯音效
-    const trophySound = document.getElementById('trophySound');
-    trophySound.currentTime = 0;
-    trophySound.play();
-
-    // 控制图片显示
-    const trophyImg = document.getElementById('trophyImage');
-    if(passedLevels >= 1) {
-        trophyImg.style.display = 'block';
-    } else {
-        trophyImg.style.display = 'none';
-    }
-
-    document.getElementById('resultTitle').textContent = `¡Completaste ${passedLevels} niveles!`;
-    document.getElementById('resultMessage').textContent = result.msg;
-    document.getElementById('resultModal').style.display = 'block';
-    document.getElementById('gameContainer').style.display = 'none';
-}
+            // 播放奖杯音效
+            const trophySound = document.getElementById('trophySound');
+            trophySound.currentTime = 0;
+            trophySound.play();
+            // 控制图片显示
+            const trophyImg = document.getElementById('trophyImage');
+            if(passedLevels >= 1) {
+                trophyImg.style.display = 'block';
+            } else {
+                trophyImg.style.display = 'none';
+            }
+            document.getElementById('resultTitle').textContent = `¡Completaste ${passedLevels} niveles!`;
+            document.getElementById('resultMessage').textContent = result.msg;
+            document.getElementById('resultModal').style.display = 'block';
+            document.getElementById('gameContainer').style.display = 'none';
+        }
 </script>
 <div id="shareFallback">📋 链接已复制，快去粘贴分享吧！</div>
 </body>
